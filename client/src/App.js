@@ -1,9 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import MainRouter from "./MainRouter";
 
-class App extends Component {
-  render() {
-    return <div>I'M READY TO USE THE BACK END APIS! :-)</div>;
-  }
-}
+const App = () => (
+  <BrowserRouter>
+    <MainRouter />
+  </BrowserRouter>
+);
 
 export default App;
