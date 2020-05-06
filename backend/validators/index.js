@@ -1,7 +1,7 @@
 exports.createTripValidator = (req, res, next) => {
   //title
   req.check("destination", "Destination is empty").notEmpty();
-  req.check("destination", "title must be less than 50 chars").isLength({
+  req.check("destination", "Destination must be less than 50 chars").isLength({
     max: 50,
   });
 
