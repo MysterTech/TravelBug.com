@@ -60,7 +60,7 @@ exports.tripsByUserId = (req, res) => {
   })
     .populate("createdBy", "_id name")
     .sort("_created")
-    .exec((err, posts) => {
+    .exec((err, trips) => {
       if (err) {
         return res.status(400).json({
           error: err,
@@ -72,9 +72,9 @@ exports.tripsByUserId = (req, res) => {
 
 exports.isCreator = (req, res, next) => {
   let sameUser = req.trip && req.auth && req.trip.createdBy._id == req.auth._id;
-  let adminUser = req.post && req.auth && req.auth.role === "admin";
+  let adminUser = req.trip && req.auth && req.auth.role === "admin";
 
-  // console.log("req.post ", req.post, " req.auth ", req.auth);
+  // console.log("req.trip ", req.trip, " req.auth ", req.auth);
   // console.log("SAMEUSER: ", sameUser, " ADMINUSER: ", adminUser);
 
   let isCreator = sameUser || adminUser;
