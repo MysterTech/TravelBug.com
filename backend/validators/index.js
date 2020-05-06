@@ -1,17 +1,15 @@
-exports.createPostValidator = (req, res, next) => {
+exports.createTripValidator = (req, res, next) => {
   //title
-  req.check("title", "Title is empty").notEmpty();
-  req.check("title", "title must be between 4 and 150 chars").isLength({
-    min: 4,
-    max: 150,
+  req.check("destination", "Destination is empty").notEmpty();
+  req.check("destination", "title must be less than 50 chars").isLength({
+    max: 50,
   });
 
-  //body
-  req.check("body", "Body is empty").notEmpty;
-  req.check("body", "Body must be between 4 and 2000 chars").isLength({
-    min: 4,
-    max: 2000,
-  });
+  //startDate
+  req.check("startDate", "Start date is empty").notEmpty;
+
+  //endDate
+  req.check("endDate", "End date is empty").notEmpty;
 
   const errors = req.validationErrors();
 
