@@ -70,7 +70,7 @@ class Signup extends Component {
         />
       </div>
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Submit
+        Sign up
       </button>
     </form>
   );
@@ -78,8 +78,7 @@ class Signup extends Component {
   render() {
     const { name, email, password, error, open } = this.state;
     return (
-      <div className="container">
-        <h2 className="mt-5 mb-5">Signup</h2>
+      <div className="container d-flex justify-content-center">
         <div
           className="alert alert-danger"
           style={{ display: error ? "" : "none" }}
@@ -92,7 +91,7 @@ class Signup extends Component {
           style={{ display: open ? "" : "none" }}
         >
           New account is successfully created. Please{" "}
-          <Link to="/signin">sign in</Link>.
+          <Link to="/">sign in</Link>.
         </div>
 
         {this.signUpForm(name, email, password)}

@@ -14,7 +14,7 @@ export const signup = (user) => {
 };
 
 export const signIn = (user) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/signIn`, {
+  return fetch(`http://localhost:8080/signIn`, {
     method: "POST",
     headers: {
       Accept: "application/json",

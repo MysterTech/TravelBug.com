@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { signout, isAuthenticated } from "../auth";
+import logo from "../images/logo_plain_200x200.png";
+import logoWCap from "../images/logo_200x200.png";
 
 const isActive = (history, path) => {
   if (history.location.pathname === path) {
@@ -10,32 +12,19 @@ const isActive = (history, path) => {
 
 const Menu = ({ history }) => (
   <div>
-    <ul className="nav nav-tabs bg-primary">
-      {!isAuthenticated() && (
-        <>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              style={isActive(history, "/signin")}
-              to="/"
-            >
-              Signin
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              style={isActive(history, "/signup")}
-              to="/signup"
-            >
-              Signup
-            </Link>
-          </li>
-        </>
-      )}
-
+    {!isAuthenticated() && (
+      <a href="/" className="d-flex justify-content-center">
+        <img src={logoWCap} alt="Logo" height="200" width="200" />
+      </a>
+    )}
+    <ul className="nav nav-tabs bg-dark">
       {isAuthenticated() && (
         <>
+          <li>
+            <a href="/">
+              <img src={logo} alt="Logo" height="80" width="80" />
+            </a>
+          </li>
           <li className="nav-item">
             <span
               className="nav-link"

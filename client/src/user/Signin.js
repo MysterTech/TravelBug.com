@@ -58,9 +58,18 @@ class Signin extends Component {
           value={password}
         />
       </div>
-      <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Submit
+      <button
+        onClick={this.clickSubmit}
+        className="btn btn-raised btn-secondary"
+      >
+        Sign In
       </button>
+      <p>
+        Don't have an account yet?
+        <a href="/signup" target="_self">
+          Register now.
+        </a>
+      </p>
     </form>
   );
 
@@ -72,8 +81,7 @@ class Signin extends Component {
     }
 
     return (
-      <div className="container">
-        <h2 className="mt-5 mb-5 text-center">SignIn</h2>
+      <div className="container d-flex justify-content-center">
         <div
           className="alert alert-danger"
           style={{ display: error ? "" : "none" }}
