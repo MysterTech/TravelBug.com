@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   salt: String,
-  created: {
-    type: Date,
-    default: Date.now,
+  role: {
+    type: String,
+    trim: true,
+    required: true,
   },
-  updated: Date,
 });
 
 //virtual field

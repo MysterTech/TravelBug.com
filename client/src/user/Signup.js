@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { signup } from "../auth";
 import { Link } from "react-router-dom";
+
 class Signup extends Component {
   constructor() {
     super();
@@ -8,6 +9,7 @@ class Signup extends Component {
       name: "",
       email: "",
       password: "",
+      role: "Normal_User",
       error: "",
       open: false,
     };
@@ -20,13 +22,14 @@ class Signup extends Component {
 
   clickSubmit = (event) => {
     event.preventDefault();
-    const { name, email, password } = this.state;
+    const { name, email, password, role } = this.state;
     const user = {
       name,
       email,
       password,
+      role,
     };
-    // console.log(user);
+    console.log(user);
     signup(user).then((data) => {
       if (data.error) this.setState({ error: data.error });
       else
@@ -35,12 +38,13 @@ class Signup extends Component {
           name: "",
           email: "",
           password: "",
+          role: "Normal_User",
           open: true,
         });
     });
   };
 
-  signUpForm = (name, email, password) => (
+  signUpForm = (name, email, password, role) => (
     <form>
       <div className="form-group">
         <label className="text-muted">Name</label>
@@ -51,6 +55,17 @@ class Signup extends Component {
           value={name}
         />
       </div>
+      <label className="text-muted">Role &nbsp;&nbsp;</label>
+      <select
+        class="mdb-select md-form"
+        type="role"
+        onChange={this.handleChange("role")}
+        value={role}
+      >
+        <option value="Normal_User">Normal user</option>
+        <option value="User_Manager">User manager</option>
+        <option value="Admin">Administrator</option>
+      </select>
       <div className="form-group">
         <label className="text-muted">Email</label>
         <input

@@ -4,7 +4,7 @@ import PrivateRoute from "./auth/PrivateRoute";
 import Menu from "./core/Menu";
 import Signup from "./user/Signup";
 import Signin from "./user/Signin";
-import TripsByUserId from "./trip/TripsByUserId";
+import LoginView from "./views/LoginView";
 
 const MainRouter = () => (
   <div>
@@ -12,7 +12,7 @@ const MainRouter = () => (
     <Switch>
       <Route exact path="/" component={Signin} />
       <Route exact path="/Signup" component={Signup} />
-      <PrivateRoute exact path="/trips/:userId" component={TripsByUserId} />
+      <PrivateRoute exact path="/user/:userId" component={LoginView} />
     </Switch>
   </div>
 );

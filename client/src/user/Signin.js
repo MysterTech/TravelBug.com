@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { authenticate, signIn } from "../auth";
+import { authenticate, signIn, isAuthenticated } from "../auth";
 
 class Signin extends Component {
   constructor() {
@@ -9,7 +9,7 @@ class Signin extends Component {
       email: "",
       password: "",
       error: "",
-      redirectToRenderer: false,
+      redirectToLoginView: false,
       loading: false,
     };
   }
@@ -77,7 +77,7 @@ class Signin extends Component {
     const { email, password, error, redirectToRenderer, loading } = this.state;
 
     if (redirectToRenderer) {
-      return <Redirect to="/" />;
+      return <Redirect to={`/user/${isAuthenticated().user._id}`} />;
     }
 
     return (

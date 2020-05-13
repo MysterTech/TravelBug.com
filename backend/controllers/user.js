@@ -43,6 +43,7 @@ exports.updateUser = (req, res, next) => {
   let user = req.profile;
   user = _.extend(user, req.body);
   user.updated = Date.now();
+  console.log(user);
   user.save((err) => {
     if (err) {
       return res.status(400).json({
