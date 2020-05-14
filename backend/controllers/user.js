@@ -30,7 +30,30 @@ exports.allUsers = (req, res) => {
       });
     }
     res.json(users);
-  }).select("name email updated created");
+  }).select("name email role");
+};
+
+exports.allUsersWPg = async (req, res) => {
+  // get current page from req.query or use default value of 1
+  const currentPage = req.query.page || 1;
+  // return 10 users per page
+  const perPage = 10;
+  let totalItems;
+  const users = await User.find()
+    // countDocuments() gives you total count of trips
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return User.find()
+        .skip((currentPage - 1) * perPage)
+        .sort({ name: -1 })
+        .limit(perPage)
+        .select("name email role");
+    })
+    .then((users) => {
+      res.status(200).json(users);
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getUser = (req, res) => {

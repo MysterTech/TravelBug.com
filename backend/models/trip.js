@@ -8,7 +8,6 @@ const tripSchema = new mongoose.Schema({
   },
   comment: {
     type: String,
-    required: true,
   },
   createdBy: {
     type: ObjectId,

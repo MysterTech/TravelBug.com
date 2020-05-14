@@ -1,31 +1,33 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { isAuthenticated } from "../auth/index";
+import { listByUser } from "../trip/apiTrip";
 
 class LoginView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAdmin: false,
-      isUserManager: false,
+      isAdmin: isAuthenticated().user.role === "Admin",
+      isUserManager: isAuthenticated().user.role === "User_Manager",
       error: "",
       user: isAuthenticated().user,
+      trips: [],
     };
   }
   render() {
     const { isAdmin, isUserManager } = this.state;
 
-    /* if (isAdmin) {
-      return <Redirect to={`/admin/${user._id}`} />;
+    if (isAdmin) {
+      return <Redirect to={`/admin/${isAuthenticated().user._id}`} />;
     }
 
     if (isUserManager) {
-      return <Redirect to={`//${user._id}`} />;
-    } */
+      return <Redirect to={`/user_manager/${isAuthenticated().user._id}`} />;
+    }
 
     return (
       <div className="d-flex">
-        <h2 className="mt-5 mb-5">Create a new post</h2>
+        <h2 className="mt-5 mb-5">Trips</h2>
         {/* <div
           className="alert alert-danger"
           style={{ display: error ? "" : "none" }}

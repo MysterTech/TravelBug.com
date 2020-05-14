@@ -1,8 +1,8 @@
 const Trip = require("../models/trip");
-const formidable = require("formidable");
 const fs = require("fs");
 const _ = require("lodash");
 
+// trip middleware
 exports.tripById = (req, res, next, id) => {
   Trip.findById(id)
     .populate("createdBy", "_id name")
@@ -17,59 +17,7 @@ exports.tripById = (req, res, next, id) => {
     });
 };
 
-exports.getTrip = (req, res) => {
-  const trips = Trip.find()
-    .populate("createdBy", "_id name")
-    .select("_id destination comment startDate endDate")
-    .then((trips) =>
-      res.json({
-        trips: trips,
-      })
-    )
-    .catch((err) => console.log(err));
-};
-
-exports.createTrip = (req, res, next) => {
-  let form = new formidable.IncomingForm();
-  form.keepExtensions = true;
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      return res.status(400).json({
-        error: "Image could not be uploaded",
-      });
-    }
-    let trip = new Trip(fields);
-    trip.createdBy = req.profile;
-    req.profile.hashed_password = undefined;
-    req.profile.salt = undefined;
-
-    trip.save((err, result) => {
-      if (err) {
-        return res.status(400).json({
-          error: err,
-        });
-      }
-      res.json(result);
-    });
-  });
-};
-
-exports.tripsByUserId = (req, res) => {
-  Trip.find({
-    createdBy: req.profile._id,
-  })
-    .populate("createdBy", "_id name")
-    .sort("_created")
-    .exec((err, trips) => {
-      if (err) {
-        return res.status(400).json({
-          error: err,
-        });
-      }
-      res.json(trips);
-    });
-};
-
+// validator to check if the trip is created by requestor
 exports.isCreator = (req, res, next) => {
   let sameUser = req.trip && req.auth && req.trip.createdBy._id == req.auth._id;
   let adminUser = req.trip && req.auth && req.auth.role === "admin";
@@ -87,6 +35,91 @@ exports.isCreator = (req, res, next) => {
   next();
 };
 
+// function to create a trip
+exports.createTrip = (req, res) => {
+  const trip = new Trip(req.body);
+  const profile = req.profile;
+  profile.salt = undefined;
+  profile.hashed_password = undefined;
+  trip.createdBy = profile;
+  trip.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.status(200).json({
+      trip: result,
+    });
+  });
+};
+
+// function to get all trips for all users page wise
+exports.getAllTrips = async (req, res) => {
+  // get current page from req.query or use default value of 1
+  const currentPage = req.query.page || 1;
+  // return 10 trips per page
+  const perPage = 10;
+  let totalItems;
+  const trips = await Trip.find()
+    // countDocuments() gives you total count of trips
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Trip.find()
+        .skip((currentPage - 1) * perPage)
+        .populate("createdBy", "_id name")
+        .sort({ startDate: -1 })
+        .limit(perPage)
+        .select("destination comment startDate endDate createdBy");
+    })
+    .then((trips) => {
+      res.status(200).json(trips);
+    })
+    .catch((err) => console.log(err));
+};
+
+// function to get trips for a particular userId pagewise
+exports.getTrips = async (req, res) => {
+  // get current page from req.query or use default value of 1
+  const currentPage = req.query.page || 1;
+  // return 10 trips per page
+  const perPage = 100;
+  let totalItems;
+  const trips = await Trip.find({
+    createdBy: req.profile._id,
+  })
+    // countDocuments() gives you total count of trips
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Trip.find({ createdBy: req.profile._id })
+        .skip((currentPage - 1) * perPage)
+        .populate("createdBy", "_id name")
+        .sort({ startDate: -1 })
+        .limit(perPage)
+        .select("destination comment startDate endDate createdBy");
+    })
+    .then((trips) => {
+      res.status(200).json(trips);
+    })
+    .catch((err) => console.log(err));
+};
+
+// function to get trips filtered on fields pagewise
+exports.getFilteredTrips = (req, res) => {
+  const trips = Trip.find()
+    .populate("createdBy", "_id name")
+    .select("_id destination comment startDate endDate")
+    .then((trips) =>
+      res.json({
+        trips: trips,
+      })
+    )
+    .catch((err) => console.log(err));
+};
+
+// function to delete trip
 exports.deleteTrip = (req, res) => {
   let trip = req.trip;
   trip.remove((err, trip) => {
@@ -101,10 +134,11 @@ exports.deleteTrip = (req, res) => {
   });
 };
 
-exports.updateTrip = (req, res, next) => {
+// function to update trip
+exports.updateTrip = (req, res) => {
   let trip = req.trip;
   trip = _.extend(trip, req.body);
-  trip.save((err) => {
+  trip.save((err, trip) => {
     if (err) {
       return res.status(400).json({
         error: "You are not authorised to perform this action",

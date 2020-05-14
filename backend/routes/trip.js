@@ -1,9 +1,10 @@
 const express = require("express");
 const {
-  createTrip,
   tripById,
-  tripsByUserId,
   isCreator,
+  createTrip,
+  getAllTrips,
+  getTrips,
   updateTrip,
   deleteTrip,
 } = require("../controllers/trip");
@@ -19,7 +20,8 @@ router.post(
   createTrip,
   createTripValidator
 );
-router.get("/trips/by/:userId", tripsByUserId);
+router.get("/trips", requireSignIn, getAllTrips);
+router.get("/trips/:userId", requireSignIn, getTrips);
 router.delete("/trip/:tripId", requireSignIn, isCreator, deleteTrip);
 router.put("/trip/:tripId", requireSignIn, isCreator, updateTrip);
 

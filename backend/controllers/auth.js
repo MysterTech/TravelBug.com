@@ -31,10 +31,10 @@ exports.signIn = (req, res) => {
       });
     }
 
-    const { _id, name, email } = user;
+    const { _id, name, email, role } = user;
     const token = Jwt.sign({ _id }, process.env.JWT_SECRET);
     res.cookie("t", token, { expires: new Date(Date.now() + 9999) });
-    return res.json({ token, user: { _id, name, email } });
+    return res.json({ token, user: { _id, name, email, role } });
   });
 };
 
