@@ -5,6 +5,8 @@ import Menu from "./core/Menu";
 import Signup from "./user/Signup";
 import Signin from "./user/Signin";
 import LoginView from "./views/LoginView";
+import EditTrip from "./trip/EditTrip";
+import CreateTrip from "./trip/CreateTrip";
 import UserManagerView from "./views/UserManagerView";
 import AdminView from "./views/AdminView";
 
@@ -15,6 +17,8 @@ const MainRouter = () => (
       <Route exact path="/" component={Signin} />
       <Route exact path="/Signup" component={Signup} />
       <PrivateRoute exact path="/user/:userId" component={LoginView} />
+      <PrivateRoute exact path="/trip/new/" component={CreateTrip} />
+      <PrivateRoute exact path="/trip/:tripId" component={EditTrip} />
       <PrivateRoute
         exact
         path="/user_manager/:userId"

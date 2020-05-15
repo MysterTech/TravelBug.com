@@ -3,9 +3,10 @@ export const create = (userId, token, trip) => {
     method: "POST",
     headers: {
       Accept: "application/json",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: trip,
+    body: JSON.stringify(trip),
   })
     .then((response) => {
       return response.json();
@@ -33,15 +34,18 @@ export const singleTrip = (tripId) => {
     .catch((err) => console.log(err));
 };
 
-export const listByUser = (userId, token) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/trips/by/${userId}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  })
+export const listByUser = (userId, token, page) => {
+  return fetch(
+    `${process.env.REACT_APP_API_URL}/trips/${userId}?page=${page}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
     .then((response) => {
       return response.json();
     })

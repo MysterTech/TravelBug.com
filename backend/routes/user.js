@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  createUser,
   userById,
   allUsers,
   allUsersWPg,
@@ -8,9 +9,11 @@ const {
   deleteUser,
 } = require("../controllers/user");
 const { requireSignIn } = require("../controllers/auth");
+const { userSignupValidator } = require("../validators/");
 
 const router = express.Router();
 
+router.post("/user/new/", requireSignIn, createUser, userSignupValidator);
 router.get("/users", requireSignIn, allUsersWPg);
 router.get("/users/params", requireSignIn, allUsers);
 router.get("/user/:userId", requireSignIn, getUser);

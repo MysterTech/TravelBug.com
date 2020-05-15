@@ -14,12 +14,12 @@ const tripSchema = new mongoose.Schema({
     ref: "User",
   },
   startDate: {
-    type: Date,
-    default: Date.now,
+    type: String,
+    required: true,
   },
   endDate: {
-    type: Date,
-    default: Date.now,
+    type: String,
+    required: true,
   },
 });
 

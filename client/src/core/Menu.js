@@ -19,7 +19,7 @@ const Menu = ({ history }) => (
     )}
 
     {isAuthenticated() && (
-      <ul className="nav nav-tabs bg-dark">
+      <ul className="nav nav-tabs bg-dark fixed-top">
         <li>
           <a href="/">
             <img src={logo} alt="Logo" height="80" width="200" />

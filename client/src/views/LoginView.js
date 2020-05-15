@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { isAuthenticated } from "../auth/index";
-import { listByUser } from "../trip/apiTrip";
+import Trips from "../trip/Trips";
 
 class LoginView extends Component {
   constructor(props) {
@@ -11,9 +11,11 @@ class LoginView extends Component {
       isUserManager: isAuthenticated().user.role === "User_Manager",
       error: "",
       user: isAuthenticated().user,
-      trips: [],
     };
   }
+
+  init = (userId) => {};
+
   render() {
     const { isAdmin, isUserManager } = this.state;
 
@@ -26,8 +28,10 @@ class LoginView extends Component {
     }
 
     return (
-      <div className="d-flex">
-        <h2 className="mt-5 mb-5">Trips</h2>
+      <div className="container">
+        <h2 className="mt-5">""</h2>
+        <h2 className="mt-5">Trips</h2>
+        <Trips />
         {/* <div
           className="alert alert-danger"
           style={{ display: error ? "" : "none" }}

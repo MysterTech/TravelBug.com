@@ -37,12 +37,12 @@ exports.isCreator = (req, res, next) => {
 
 // function to create a trip
 exports.createTrip = (req, res) => {
+  console.log(req.body);
   const trip = new Trip(req.body);
   const profile = req.profile;
   profile.salt = undefined;
   profile.hashed_password = undefined;
-  trip.createdBy = profile;
-  trip.save((err, result) => {
+  post.save((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err,
@@ -84,7 +84,7 @@ exports.getTrips = async (req, res) => {
   // get current page from req.query or use default value of 1
   const currentPage = req.query.page || 1;
   // return 10 trips per page
-  const perPage = 100;
+  const perPage = 12;
   let totalItems;
   const trips = await Trip.find({
     createdBy: req.profile._id,
