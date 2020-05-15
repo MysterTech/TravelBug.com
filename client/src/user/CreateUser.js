@@ -1,18 +1,18 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { create } from "../user/apiUser";
-import { isAuthenticated } from "../auth";
+import { Redirect } from "react-router-dom";
+import { signup, isAuthenticated } from "../auth";
 
-class CreateTrip extends Component {
-  constructor(props) {
-    super(props);
+class CreateUser extends Component {
+  constructor() {
+    super();
     this.state = {
-      destination: "",
-      startDate: "",
-      endDate: "",
-      comment: "",
+      name: "",
+      email: "",
+      password: "",
+      role: "",
       error: "",
       open: false,
+      redirectToRenderer: false,
     };
   }
 
@@ -21,72 +21,75 @@ class CreateTrip extends Component {
     this.setState({ [name]: event.target.value });
   };
 
+  clickBack = (event) => {
+    this.setState({ redirectToRenderer: true });
+  };
+
   clickSubmit = (event) => {
     event.preventDefault();
-    const { destination, startDate, endDate, comment } = this.state;
-    const trip = {
-      destination,
-      startDate,
-      endDate,
-      comment,
+    const { name, email, password, role } = this.state;
+    const user = {
+      name,
+      email,
+      password,
+      role,
     };
-    const userId = isAuthenticated().user._id;
-    const token = JSON.parse(localStorage.getItem("jwt")).token;
-    create(userId, token, trip).then((data) => {
+    console.log(user);
+    signup(user).then((data) => {
       if (data.error) this.setState({ error: data.error });
       else
         this.setState({
-          destination: "",
-          startDate: "",
-          endDate: "",
-          comment: "",
           error: "",
+          name: "",
+          email: "",
+          password: "",
+          role: "Normal_User",
           open: true,
         });
     });
   };
 
-  tripForm = (destination, startDate, endDate, comment) => (
+  signUpForm = (name, email, password, role) => (
     <div>
       <h2 className="mt-5">" "</h2>
-      <h2 className="mt-5">Create trip</h2>
+      <h2 className="mt-5">Create user</h2>
       <form>
         <div className="form-group">
-          <label className="text-muted">Destination</label>
+          <label className="text-muted">Name</label>
           <input
-            onChange={this.handleChange("destination")}
+            onChange={this.handleChange("name")}
             type="text"
             className="form-control"
-            value={destination}
+            value={name}
+          />
+        </div>
+        <label className="text-muted">Role &nbsp;&nbsp;</label>
+        <select
+          class="mdb-select md-form"
+          type="role"
+          onChange={this.handleChange("role")}
+          value={role}
+        >
+          <option value="Normal_User">Normal user</option>
+          <option value="User_Manager">User manager</option>
+          <option value="Admin">Administrator</option>
+        </select>
+        <div className="form-group">
+          <label className="text-muted">Email</label>
+          <input
+            onChange={this.handleChange("email")}
+            type="email"
+            className="form-control"
+            value={email}
           />
         </div>
         <div className="form-group">
-          <label className="text-muted">Start date</label>
+          <label className="text-muted">Password</label>
           <input
-            onChange={this.handleChange("startDate")}
-            type="date"
-            id="fname"
-            name="fname"
-            value={startDate}
-          ></input>
-        </div>
-        <div className="form-group">
-          <label className="text-muted">End date</label>
-          <input
-            onChange={this.handleChange("endDate")}
-            type="date"
-            id="fname"
-            name="fname"
-            value={endDate}
-          ></input>
-        </div>
-        <div className="form-group">
-          <label className="text-muted">Comment</label>
-          <input
-            onChange={this.handleChange("comment")}
-            type="text"
+            onChange={this.handleChange("password")}
+            type="password"
             className="form-control"
-            value={comment}
+            value={password}
           />
         </div>
         <button
@@ -95,22 +98,32 @@ class CreateTrip extends Component {
         >
           Submit
         </button>
+        <button
+          onClick={this.clickBack}
+          className="btn btn-raised btn-primary mr-5"
+        >
+          Back to all users
+        </button>
       </form>
     </div>
   );
 
   render() {
     const {
-      destination,
-      startDate,
-      endDate,
-      comment,
+      name,
+      email,
+      role,
+      password,
       error,
       open,
+      redirectToRenderer,
     } = this.state;
+    console.log("in render");
     var userId = isAuthenticated().user._id;
-    var baseLink = "/user/";
-    const userLink = baseLink.concat(userId);
+    var redirectLink = `/user_manager/${userId}`;
+    if (redirectToRenderer) {
+      return <Redirect to={redirectLink} />;
+    }
     return (
       <div className="container d-flex justify-content-center">
         <div
@@ -119,19 +132,19 @@ class CreateTrip extends Component {
         >
           {error}
         </div>
+
         <div
           className="alert alert-info mt-5"
           style={{ display: open ? "" : "none" }}
         >
           <h2 className="mt-5">" Result"</h2>
-          New trip is successfully created. You can continue creating new trips
-          or review <Link to={userLink}>trips</Link>.
+          New account is successfully created.
         </div>
 
-        {this.tripForm(destination, startDate, endDate, comment)}
+        {this.signUpForm(name, email, password, role)}
       </div>
     );
   }
 }
 
-export default CreateTrip;
+export default CreateUser;

@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
-import { isAuthenticated } from "../auth";
 import { singleTrip } from "../trip/apiTrip";
 
 class EditTrip extends Component {

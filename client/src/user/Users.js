@@ -1,45 +1,44 @@
 import React, { Component } from "react";
-import { listByUser, remove } from "./apiTrip";
-import { isAuthenticated } from "../auth";
+import { list, remove } from "./apiUser";
 import { Link, Redirect } from "react-router-dom";
 
-class Trips extends Component {
+class Users extends Component {
   constructor() {
     super();
     this.state = {
-      trips: [],
+      users: [],
       selected: [],
       page: 1,
       redirectToCreate: false,
     };
   }
 
-  loadTrips = (page) => {
+  loadUsers = (page) => {
     const token = JSON.parse(localStorage.getItem("jwt")).token;
-    listByUser(isAuthenticated().user._id, token, page).then((data) => {
+    list(token, page).then((data) => {
       if (data.error) {
         console.log(data.error);
       } else {
-        this.setState({ trips: data });
+        this.setState({ users: data });
       }
     });
   };
 
   componentDidMount() {
-    this.loadTrips(this.state.page);
+    this.loadUsers(this.state.page);
   }
 
   loadMore = (number) => {
     this.setState({ page: this.state.page + number });
-    this.loadTrips(this.state.page + number);
+    this.loadUsers(this.state.page + number);
   };
 
   loadLess = (number) => {
     this.setState({ page: this.state.page - number });
-    this.loadTrips(this.state.page - number);
+    this.loadUsers(this.state.page - number);
   };
 
-  addRemoveSelected = (tripId) => {
+  addRemoveSelected = (userId) => {
     var selected = this.state.selected;
     var checkboxes = document.getElementsByName("isSelected");
     var numberOfCheckedItems = 0;
@@ -48,9 +47,9 @@ class Trips extends Component {
       if (checkboxes[i].checked) numberOfCheckedItems++;
     }
 
-    if (numberOfCheckedItems > selected.length) selected.push(tripId);
+    if (numberOfCheckedItems > selected.length) selected.push(userId);
     else {
-      var index = selected.indexOf(tripId);
+      var index = selected.indexOf(userId);
       if (index !== -1) {
         selected.splice(index, 1);
       }
@@ -66,69 +65,71 @@ class Trips extends Component {
   deleteSelected = () => {
     const token = JSON.parse(localStorage.getItem("jwt")).token;
     var selected = this.state.selected;
-    var trips = this.state.trips;
-    selected.forEach((tripId) => remove(tripId, token));
-    this.loadTrips(this.state.page);
+    var users = this.state.users;
+    selected.forEach((userId) => remove(userId, token));
+    this.loadUsers(this.state.page);
     var cards = document.getElementsByName("isSelected");
     for (var i = 0; i < cards.length; i++) {
       if (cards[i].type === "checkbox") cards[i].checked = false;
     }
-    this.setState({ selected: [], trips: trips });
+    this.setState({ selected: [], users: users });
   };
 
-  getDays = (startDate) => {
-    const now = Date.now();
-    const daysToGo = Math.floor((startDate - now) / (1000 * 3600 * 24));
-    if (daysToGo > 0) {
-      return daysToGo;
-    }
-    return -1;
-  };
-
-  renderTrips = (trips) => {
+  renderTable = (users) => {
     return (
-      <div className="row">
-        {trips.map((trip, i) => {
-          const startDate = Date.parse(trip.startDate);
-          const daysToTrip = Math.floor(this.getDays(startDate));
-          const tripRef = "/trip/" + trip._id;
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        {this.renderUsers(users)}
+      </table>
+    );
+  };
+
+  renderUsers = (users) => {
+    return (
+      <tbody>
+        {users.map((user, i) => {
+          const userRef = "/user/edit/" + user._id;
           return (
-            <div className="card col-md-4" key={i}>
-              <div className="card-body">
-                <h5 className="card-title">
-                  <input
-                    type="checkbox"
-                    name="isSelected"
-                    onClick={(e) => this.addRemoveSelected(trip._id)}
-                  />
-                  &nbsp;&nbsp;
-                  {trip.destination}
-                </h5>
-                <h6>Start : {trip.startDate.split("T")[0]}</h6>
-                {daysToTrip !== -1 ? <h6>{daysToTrip} days to go</h6> : ""}
-                <h6>Ending : {trip.endDate.split("T")[0]}</h6>
-                <h6>Comments : </h6>
-                <p className="card-text">{trip.comment.substring(0, 100)}</p>
-                <br />
-                <Link to={tripRef}>Edit</Link>.
-              </div>
-            </div>
+            <tr>
+              <th scope="row">
+                <input
+                  type="checkbox"
+                  name="isSelected"
+                  onClick={(e) => this.addRemoveSelected(user._id)}
+                />
+              </th>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>
+                <Link to={userRef}>Edit</Link>
+              </td>
+            </tr>
           );
         })}
-      </div>
+      </tbody>
     );
   };
 
   render() {
-    const { trips, page, redirectToCreate } = this.state;
+    const { users, page, redirectToCreate } = this.state;
     if (redirectToCreate) {
-      return <Redirect to={`/trip/new`} />;
+      console.log("redirecting now");
+      return <Redirect to="/user_manager/user/new/" />;
     }
     return (
       <div className="container">
-        <h2 className="mt-5 mb-5">{!trips.length ? "No more trips!" : ""}</h2>
+        <h2 className="mt-5 mb-5">{!users.length ? "No more users!" : ""}</h2>
 
-        {this.renderTrips(trips)}
+        {this.renderTable(users)}
 
         {page > 1 ? (
           <button
@@ -146,7 +147,7 @@ class Trips extends Component {
         >
           {page}&nbsp;
         </button>
-        {trips.length ? (
+        {users.length ? (
           <button
             className="btn btn-raised btn-success mt-5 mb-5"
             onClick={() => this.loadMore(1)}
@@ -161,7 +162,7 @@ class Trips extends Component {
           className="btn btn-raised btn-outline-primary mt-5 mb-5"
           onClick={() => this.redirectToCreate()}
         >
-          Create Trip
+          Create User
         </button>
 
         <button
@@ -175,4 +176,4 @@ class Trips extends Component {
   }
 }
 
-export default Trips;
+export default Users;

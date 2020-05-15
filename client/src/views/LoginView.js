@@ -14,10 +14,8 @@ class LoginView extends Component {
     };
   }
 
-  init = (userId) => {};
-
   render() {
-    const { isAdmin, isUserManager } = this.state;
+    const { isAdmin, isUserManager, error } = this.state;
 
     if (isAdmin) {
       return <Redirect to={`/admin/${isAuthenticated().user._id}`} />;
@@ -32,20 +30,12 @@ class LoginView extends Component {
         <h2 className="mt-5">""</h2>
         <h2 className="mt-5">Trips</h2>
         <Trips />
-        {/* <div
+        <div
           className="alert alert-danger"
           style={{ display: error ? "" : "none" }}
         >
           {error}
         </div>
-
-        {loading ? (
-          <div className="jumbotron text-center">
-            <h2>Loading...</h2>
-          </div>
-        ) : (
-          ""
-        )} */}
       </div>
     );
   }
