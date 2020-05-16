@@ -110,7 +110,7 @@ exports.getTrip = (req, res) => {
 
 // function to get trips filtered on fields pagewise
 exports.getFilteredTrips = (req, res) => {
-  const trips = Trip.find()
+  const trips = Trip.find({ createdBy: req.profile })
     .populate("createdBy", "_id name")
     .select("_id destination comment startDate endDate")
     .then((trips) =>

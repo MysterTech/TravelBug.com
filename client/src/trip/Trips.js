@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { listByUser, remove } from "./apiTrip";
+import { getAllTrips, listByUser, remove } from "./apiTrip";
 import { isAuthenticated } from "../auth";
 import { Link, Redirect } from "react-router-dom";
 
@@ -24,6 +24,36 @@ class Trips extends Component {
       }
     });
   };
+
+  async createSchedule() {
+    const token = JSON.parse(localStorage.getItem("jwt")).token;
+    const userId = isAuthenticated().user._id;
+    const response = await getAllTrips(userId, token);
+    const trips = response.trips;
+    const filteredTrips = trips.filter(function (trip) {
+      var now = new Date();
+      var nextMonth;
+      var year;
+      if (now.getMonth() !== 11) {
+        nextMonth = now.getMonth() + 1;
+        year = now.getFullYear();
+      } else {
+        nextMonth = 0;
+        year = now.getFullYear() + 1;
+      }
+      var startDate = new Date(trip.startDate);
+      return (
+        startDate.getFullYear() === year && startDate.getMonth() === nextMonth
+      );
+    });
+    const fileData = JSON.stringify(filteredTrips);
+    const blob = new Blob([fileData], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = "filename.json";
+    link.href = url;
+    link.click();
+  }
 
   componentDidMount() {
     this.loadTrips(this.state.page);

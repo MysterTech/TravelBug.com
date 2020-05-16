@@ -1,8 +1,8 @@
 const express = require("express");
 const {
   tripById,
-  isCreator,
   createTrip,
+  getFilteredTrips,
   getAllTrips,
   getTrips,
   getTrip,
@@ -21,6 +21,7 @@ router.post(
   createTrip,
   createTripValidator
 );
+router.get("/all/trips/:userId", requireSignIn, getFilteredTrips);
 router.get("/trips", requireSignIn, getAllTrips);
 router.get("/trips/:userId", requireSignIn, getTrips);
 router.get("/trip/:tripId", requireSignIn, getTrip);
