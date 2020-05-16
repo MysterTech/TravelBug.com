@@ -39,10 +39,8 @@ exports.isCreator = (req, res, next) => {
 exports.createTrip = (req, res) => {
   console.log(req.body);
   const trip = new Trip(req.body);
-  const profile = req.profile;
-  profile.salt = undefined;
-  profile.hashed_password = undefined;
-  post.save((err, result) => {
+  trip.createdBy = req.profile;
+  trip.save((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err,
@@ -104,6 +102,10 @@ exports.getTrips = async (req, res) => {
       res.status(200).json(trips);
     })
     .catch((err) => console.log(err));
+};
+
+exports.getTrip = (req, res) => {
+  return res.json(req.trip);
 };
 
 // function to get trips filtered on fields pagewise

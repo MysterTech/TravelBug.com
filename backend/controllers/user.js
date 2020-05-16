@@ -75,20 +75,20 @@ exports.getUser = (req, res) => {
   return res.json(req.profile);
 };
 
-exports.updateUser = (req, res, next) => {
+exports.updateUser = async (req, res, next) => {
   let user = req.profile;
   user = _.extend(user, req.body);
-  user.updated = Date.now();
-  console.log(user);
-  user.save((err) => {
+  const userObject = await new User(user);
+
+  userObject.save((err) => {
     if (err) {
       return res.status(400).json({
         error: "You are not authorised to perform this action",
       });
     }
-    user.salt = undefined;
-    user.hashed_password = undefined;
-    res.json({ user });
+    userObject.salt = undefined;
+    userObject.hashed_password = undefined;
+    res.json({ userObject });
   });
 };
 

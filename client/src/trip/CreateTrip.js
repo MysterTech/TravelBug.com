@@ -128,7 +128,12 @@ class CreateTrip extends Component {
           or review <Link to={userLink}>trips</Link>.
         </div>
 
-        {this.tripForm(destination, startDate, endDate, comment)}
+        {this.tripForm(
+          destination,
+          startDate.toString(),
+          endDate.toString(),
+          comment
+        )}
       </div>
     );
   }

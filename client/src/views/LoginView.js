@@ -18,7 +18,7 @@ class LoginView extends Component {
     const { isAdmin, isUserManager, error } = this.state;
 
     if (isAdmin) {
-      return <Redirect to={`/admin/${isAuthenticated().user._id}`} />;
+      return <Redirect to={`/admin/users/${isAuthenticated().user._id}`} />;
     }
 
     if (isUserManager) {

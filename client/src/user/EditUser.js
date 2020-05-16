@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { signup, isAuthenticated } from "../auth";
+import { isAuthenticated } from "../auth";
+import { getUser, updateUser } from "./apiUser";
 
 class EditUser extends Component {
   constructor() {
@@ -15,6 +16,18 @@ class EditUser extends Component {
       redirectToRenderer: false,
     };
   }
+
+  componentDidMount = () => {
+    var userId = this.props.location.pathname.split("/")[3];
+    var token = JSON.parse(localStorage.getItem("jwt")).token;
+    getUser(userId, token).then((data) => {
+      this.setState({
+        name: data.name,
+        role: data.role,
+        email: data.email,
+      });
+    });
+  };
 
   handleChange = (name) => (event) => {
     this.setState({ error: "" });
@@ -34,8 +47,9 @@ class EditUser extends Component {
       password,
       role,
     };
-    console.log(user);
-    signup(user).then((data) => {
+    var userId = this.props.location.pathname.split("/")[3];
+    var token = JSON.parse(localStorage.getItem("jwt")).token;
+    updateUser(userId, token, user).then((data) => {
       if (data.error) this.setState({ error: data.error });
       else
         this.setState({

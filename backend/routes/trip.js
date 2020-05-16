@@ -5,6 +5,7 @@ const {
   createTrip,
   getAllTrips,
   getTrips,
+  getTrip,
   updateTrip,
   deleteTrip,
 } = require("../controllers/trip");
@@ -22,6 +23,7 @@ router.post(
 );
 router.get("/trips", requireSignIn, getAllTrips);
 router.get("/trips/:userId", requireSignIn, getTrips);
+router.get("/trip/:tripId", requireSignIn, isCreator, getTrip);
 router.delete("/trip/:tripId", requireSignIn, isCreator, deleteTrip);
 router.put("/trip/:tripId", requireSignIn, isCreator, updateTrip);
 

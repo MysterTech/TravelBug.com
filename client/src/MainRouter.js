@@ -10,7 +10,8 @@ import CreateTrip from "./trip/CreateTrip";
 import CreateUser from "./user/CreateUser";
 import EditUser from "./user/EditUser";
 import UserManagerView from "./views/UserManagerView";
-import AdminView from "./views/AdminView";
+import AdminUsersView from "./views/AdminUsersView";
+import AdminTripsView from "./views/AdminTripsView";
 
 const MainRouter = () => (
   <div>
@@ -32,7 +33,16 @@ const MainRouter = () => (
         component={CreateUser}
       />
       <PrivateRoute exact path="/user/edit/:userId" component={EditUser} />
-      <PrivateRoute exact path="/admin/:userId" component={AdminView} />
+      <PrivateRoute
+        exact
+        path="/admin/users/:userId"
+        component={AdminUsersView}
+      />
+      <PrivateRoute
+        exact
+        path="/admin/trips/:userId"
+        component={AdminTripsView}
+      />
     </Switch>
   </div>
 );
