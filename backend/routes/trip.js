@@ -23,9 +23,9 @@ router.post(
 );
 router.get("/trips", requireSignIn, getAllTrips);
 router.get("/trips/:userId", requireSignIn, getTrips);
-router.get("/trip/:tripId", requireSignIn, isCreator, getTrip);
-router.delete("/trip/:tripId", requireSignIn, isCreator, deleteTrip);
-router.put("/trip/:tripId", requireSignIn, isCreator, updateTrip);
+router.get("/trip/:tripId", requireSignIn, getTrip);
+router.delete("/trip/:tripId", requireSignIn, deleteTrip);
+router.put("/trip/:tripId", requireSignIn, updateTrip);
 
 router.param("userId", userById);
 router.param("tripId", tripById);

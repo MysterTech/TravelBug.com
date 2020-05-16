@@ -127,7 +127,12 @@ class Trips extends Component {
     return (
       <div className="container">
         <h2 className="mt-5 mb-5">{!trips.length ? "No more trips!" : ""}</h2>
-
+        <button
+          className="btn btn-raised btn-warning mt-5 mb-5"
+          onClick={() => this.createSchedule()}
+        >
+          Generate next month's schedule
+        </button>
         {this.renderTrips(trips)}
 
         {page > 1 ? (
