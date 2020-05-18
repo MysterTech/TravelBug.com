@@ -7,7 +7,6 @@
 - When displayed, each entry also has a day count to trip start (only for future trips).
 - User can filter trips.
 - Print travel plan for next month.
-- REST API. Make it possible to perform all user actions via the API, including authentication (If a mobile application and you don’t know how to create your own backend you can use Firebase.com or similar services to create the API).
-- In any case, you should be able to explain how a REST API works and demonstrate that by creating functional tests that use the REST Layer directly. Please be prepared to use REST clients like Postman, cURL, etc. for this purpose.
-- If it’s a web application, it must be a single-page application. All actions need to be done client-side using AJAX, refreshing the page is not acceptable. (If a mobile application, disregard this).
-- Functional UI/UX design is needed. You are not required to create a unique design, however, do follow best practices to make the project as functional as possible.
+- REST API. Make it possible to perform all user actions via the API, including authentication.
+- It must be a single-page application. All actions need to be done client-side using AJAX, refreshing the page is not acceptable.
+- Functional UI/UX design is needed.
