@@ -1,4 +1,4 @@
-# Write an application for travel plans
+# TravelBug
 
 - User must be able to create an account and log in. (If a mobile application, this means that more users can use the app from the same phone).
 - When logged in, a user can add trips, and edit and delete their trips.
